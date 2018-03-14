@@ -26,7 +26,7 @@ func Conn_Search( )  []Users {
 	}
 	defer l.Close()
 
-	err = l.Bind("CN=testuser,CN=Users,DC=example,DC=kg", "bublik")
+	err = l.Bind("CN=testuser,CN=Users,DC=example,DC=com", "bublik")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,14 +36,13 @@ func Conn_Search( )  []Users {
 		"DC=example,DC=kg", // The base dn to search
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
 		"(&(objectClass=*))", // The filter to apply
-		//[]string{"cn", "uid","E-mail-Addresses","whenChanged"},                    // A list attributes to retrieve
 		[]string{ "mail","cn","pwdLastSet"},
 		nil,
 	)
 
 	sr, err := l.Search(searchRequest)
 	if err != nil {
-		log.Fatal("AAA",err)
+		log.Fatal(err)
 	}
 
 	var users []Users
