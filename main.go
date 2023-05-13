@@ -33,7 +33,7 @@ func Conn_Search( )  []Users {
 
 
 	searchRequest := ldap.NewSearchRequest(
-		"DC=example,DC=kg", // The base dn to search
+		"DC=example,DC=com", // The base dn to search
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
 		"(&(objectClass=*))", // The filter to apply
 		[]string{ "mail","cn","pwdLastSet"},
@@ -102,8 +102,8 @@ func sendmail(email string, username string, expired int64) {
 		toHeader := strings.Join(toAddresses, ", ")
 
 		header := make(map[string]string)
-		header["From"] = "it@ipc.com"
-		header["To"] = toHeader
+		header["From"] = "expirepwd@expire.pwd"
+		header["To"] = header["From"]
 
 		header["Subject"] = "The validity of your password for the user " + username + " ends!"
 		header["Content-Type"] = `text/html; charset="UTF-8"`
@@ -120,7 +120,7 @@ func sendmail(email string, username string, expired int64) {
 
 		bMsg := []byte(msg)
 
-	err := smtp.SendMail("smtp.example.com:25", nil, "it@ipc.com", toAddresses, bMsg)
+	err := smtp.SendMail("smtp.example.com:25", nil, header["From"], toAddresses, bMsg)
 	if err != nil {
 		log.Fatal("OPS", err)
 	}
